@@ -14,7 +14,7 @@ Docker Compose para visualizar as gratificações
 - password: admin2
 
 ## 4. Parar:
-- sudo docker-compose up
+- sudo docker-compose down
 
 ## 5. Resolver conflito de container:
 - docker container prune
