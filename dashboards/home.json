@@ -25,7 +25,7 @@
           "uid": "PCC52D03280B7034C"
         },
         "enable": true,
-        "iconColor": "red",
+        "iconColor": "super-light-orange",
         "name": "Anotações",
         "target": {
           "editorMode": "code",
