@@ -1,0 +1,3708 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "red",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "PCC52D03280B7034C"
+        },
+        "enable": true,
+        "iconColor": "red",
+        "name": "Anotações",
+        "target": {
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  extract(epoch from data) AS \"time\",\n  data_fim::timestamp AS \"timeEnd\",\n  descricao as \"text\",\n  titulo as \"title\",\n  tags as tags,\n  id\nFROM\n  anotacoes",
+          "refId": "Anno",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      }
+    ]
+  },
+  "description": "Distribuição das FCTs no Serpro",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 7,
+      "panels": [],
+      "title": "Dados Filtrados",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PCC52D03280B7034C"
+      },
+      "description": "<br>\nFiltros: <br>\n- Competência <br>\n- Incluir FCT Zerad: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 85
+              }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 0,
+        "y": 1
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT COUNT(*)\nFROM (\n    SELECT DISTINCT ON (competencia, matricula)\n        competencia, matricula\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END   \n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND diretoria IN ($diretoria)       \n    AND superintendencia IN ($superintendencia)      \n    AND lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND cargo IN ($cargo)\n    ORDER BY competencia DESC, matricula ASC\n) AS subquery;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Total de Registros para a competência $competencia",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PCC52D03280B7034C"
+      },
+      "description": "Filtros: <br>\n- Competência <br>\n- Incluir FCT Zerad: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-yellow",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 20
+              },
+              {
+                "color": "red",
+                "value": 25
+              },
+              {
+                "color": "dark-red",
+                "value": 30
+              }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 6,
+        "y": 1
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT AVG(nivel_fca_fct_gfe) AS media_nivel_fca_fct_gfe\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria)   \n    AND superintendencia IN ($superintendencia)         \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)       ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Média da FCT de acordo com os filtros",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PCC52D03280B7034C"
+      },
+      "description": "<br>\nFiltros: <br>\n- Competência <br>\n- Incluir FCT Zerad: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-yellow",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 20
+              },
+              {
+                "color": "red",
+                "value": 25
+              },
+              {
+                "color": "dark-red",
+                "value": 30
+              }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 2,
+        "x": 11,
+        "y": 1
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT MAX(nivel_fca_fct_gfe) AS media_nivel_fca_fct_gfe\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria)  \n    AND superintendencia IN ($superintendencia)          \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)       ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "FCT Máxima",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PCC52D03280B7034C"
+      },
+      "description": "<br>\nFiltros: <br>\n- Competência <br>\n- Incluir FCT Zerad: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-yellow",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 20
+              },
+              {
+                "color": "red",
+                "value": 25
+              },
+              {
+                "color": "dark-red",
+                "value": 30
+              }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 2,
+        "x": 13,
+        "y": 1
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT MIN(nivel_fca_fct_gfe) AS media_nivel_fca_fct_gfe\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria)      \n    AND superintendencia IN ($superintendencia)      \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)       ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "FCT Mínima",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PCC52D03280B7034C"
+      },
+      "description": "",
+      "gridPos": {
+        "h": 5,
+        "w": 9,
+        "x": 15,
+        "y": 1
+      },
+      "id": 282,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div style=\"padding: 5px;width: 100%; height: 100%; border: 5;background-color: #FFFACD;\">  \n  <center>\n    <b>\n    <span style=\"color:red\"> \n      💡 Atenção!  \n    </span>  \n    </b>       \n  <b> <b> \n    <br>    \n    <b style=\"color:red\"> Dados públicos obtidos através da Lei de Acesso à Informação (Lei Federal nº 12.527/11).<b>   \n      <br>\n      <b style=\"color:red\"> Obs.: Últimos 5 anos. <br> Empresa não disponibilizou muitas informações, como das chefias, uma nova solicitação foi realizada.<b>      \n</div>\n\n\n",
+        "mode": "html"
+      },
+      "pluginVersion": "10.4.0",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PCC52D03280B7034C"
+      },
+      "description": "Filtros: <br>\n- Competência <br>\n- Incluir FCT Zerad: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "competencia"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time:MM/YYYY"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "diretoria"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 183
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "valor_fca_fct_gfe"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "locale"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "matricula"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Visualizar o histórico de FCT para a matrícula ${__data.fields.matricula}",
+                    "url": "/d/fct?orgId=1&var-matricula=${__data.fields.matricula}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "id": 1982,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "nivel_fca_fct_gfe"
+          }
+        ]
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT competencia, matricula, sigla_regional, diretoria, \n        superintendencia,\n        lotacao_hierarquica, cargo, nivel_fca_fct_gfe, \n    valor_fca_fct_gfe, data_designacao_fct, data_destituicao_fct\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)     \n    AND\n    diretoria IN ($diretoria) \n    AND superintendencia IN ($superintendencia)      \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)    \n    ORDER BY competencia DESC, sigla_regional asc, diretoria asc, lotacao_hierarquica asc, nivel_fca_fct_gfe desc, cargo ASC, matricula asc",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Dados de acordo com os filtros",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {
+              "cargo": 6,
+              "competencia": 0,
+              "data_designacao_fct": 9,
+              "data_destituicao_fct": 10,
+              "diretoria": 3,
+              "lotacao_hierarquica": 5,
+              "matricula": 1,
+              "nivel_fca_fct_gfe": 7,
+              "sigla_regional": 2,
+              "superintendencia": 4,
+              "valor_fca_fct_gfe": 8
+            },
+            "renameByName": {
+              "cargo": "Cargo",
+              "competencia": "Competência",
+              "data_designacao_fct": "Data Designação",
+              "data_destituicao_fct": "Data destituição",
+              "diretoria": "Diretoria",
+              "lotacao_hierarquica": "Lotação",
+              "matricula": "Matrícula",
+              "nivel_fca_fct_gfe": "Nível FCA/FCT/GFE",
+              "sigla_regional": "Regional",
+              "superintendencia": "Superintendência",
+              "valor_fca_fct_gfe": "Valor"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PCC52D03280B7034C"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 5,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-yellow",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 25
+              },
+              {
+                "color": "dark-red",
+                "value": 30
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "competencia"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time:MM/YYYY"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "valor_fca_fct_gfe"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "locale"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 16
+      },
+      "id": 544,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT competencia as time, AVG(nivel_fca_fct_gfe) AS media_nivel_fca_fct_gfe\n    FROM gratificacao\n    WHERE \n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END            \nGROUP BY 1\norder by 1 asc   ;\n    ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Média histórica das FCTs",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {
+              "cargo": 6,
+              "competencia": 0,
+              "data_designacao_fct": 9,
+              "data_destituicao_fct": 10,
+              "diretoria": 3,
+              "lotacao_hierarquica": 5,
+              "matricula": 1,
+              "nivel_fca_fct_gfe": 7,
+              "sigla_regional": 2,
+              "superintendencia": 4,
+              "valor_fca_fct_gfe": 8
+            },
+            "renameByName": {
+              "media_nivel_fca_fct_gfe": "Média de acordo com os filtros"
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "id": 543,
+      "panels": [],
+      "title": "Histórico de FCT por Matrícula",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PCC52D03280B7034C"
+      },
+      "description": "Obs.: Entrada de novos concursados também tem salto acima de 4 níveis\n<br>\nFiltros:\n- Regional <br>\n- Diretoria <br>\n- Superintendencia <br>\n- Lotação  <br>\n- Cargo  <br>",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "competencia"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time:MM/YYYY"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "diretoria"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 183
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "valor_fca_fct_gfe"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "locale"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "matricula"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Visualizar o histórico de FCT para a matrícula ${__data.fields.matricula}",
+                    "url": "/d/fct?orgId=1&var-matricula=${__data.fields.matricula}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Competência"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 126
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Matrícula"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 103
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Nível anterior"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 124
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Salto"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 76
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Regional"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 98
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Diretoria"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 120
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cargo"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 93
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Valor"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 96
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "data_designacao_fct"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time:DD/MM/YYYY"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "data_destituicao_fct"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time:DD/MM/YYYY"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 23
+      },
+      "id": 1,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH niveis_com_salto AS (\n    SELECT \n        competencia, matricula, sigla_regional, diretoria, \n        superintendencia,\n        lotacao_hierarquica, cargo, nivel_fca_fct_gfe, \n        valor_fca_fct_gfe, data_designacao_fct, data_destituicao_fct,\n        LAG(nivel_fca_fct_gfe) OVER (PARTITION BY matricula ORDER BY competencia) AS nivel_anterior\n    FROM \n        gratificacao\n    WHERE \n    sigla_regional IN ($sigla_regional)     \n    AND diretoria IN ($diretoria) \n    AND superintendencia IN ($superintendencia)      \n    AND lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND cargo IN ($cargo)         \n)\nSELECT \n    competencia, matricula, sigla_regional, diretoria, \n    superintendencia,\n    lotacao_hierarquica, \n    cargo, \n    nivel_fca_fct_gfe, \n    valor_fca_fct_gfe, \n    data_designacao_fct, \n    data_destituicao_fct,\n    nivel_anterior,\n    (nivel_fca_fct_gfe - nivel_anterior) AS salto\nFROM \n    niveis_com_salto\nWHERE \n    (nivel_fca_fct_gfe - nivel_anterior) >= 4 -- Salto de 4 ou mais níveis\nOrder by salto desc, competencia desc, sigla_regional, diretoria, superintendencia\n \n    ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Salto de gratificação acima de 3 níveis",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {
+              "competencia": 0,
+              "matricula": 1,
+              "nivel_anterior": 2,
+              "nivel_fca_fct_gfe": 3,
+              "salto": 4
+            },
+            "renameByName": {
+              "cargo": "Cargo",
+              "competencia": "Competência",
+              "data_designacao_fct": "Data Designação",
+              "data_destituicao_fct": "Data Destituição",
+              "diretoria": "Diretoria",
+              "lotacao_hierarquica": "Lotação",
+              "matricula": "Matrícula",
+              "nivel_anterior": "Nível anterior",
+              "nivel_fca_fct_gfe": "Nível FCA/FCT/GFE",
+              "salto": "Salto",
+              "sigla_regional": "Regional",
+              "superintendencia": "Superintendência",
+              "valor_fca_fct_gfe": "Valor"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PCC52D03280B7034C"
+      },
+      "description": "Para visualizar o histórico por matrícula, clica na matrícula em uma das tabelas: <br>\n- Salto de gratificação acima de 3 níveis\n- Dados de acordo com os filtros\n\nOu digite diretamente na variável \"Matrícula\"",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-yellow",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 25
+              },
+              {
+                "color": "dark-red",
+                "value": 30
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "competencia"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time:MM/YYYY"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "valor_fca_fct_gfe"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "locale"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 32
+      },
+      "id": 1981,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT competencia as time, nivel_fca_fct_gfe    \n    FROM gratificacao\n    WHERE matricula = '$matricula'\n    order by 1 asc   \n    ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Histórico de nível de gratificação por matrícula $matricula",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {
+              "cargo": 6,
+              "competencia": 0,
+              "data_designacao_fct": 9,
+              "data_destituicao_fct": 10,
+              "diretoria": 3,
+              "lotacao_hierarquica": 5,
+              "matricula": 1,
+              "nivel_fca_fct_gfe": 7,
+              "sigla_regional": 2,
+              "superintendencia": 4,
+              "valor_fca_fct_gfe": 8
+            },
+            "renameByName": {}
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PCC52D03280B7034C"
+      },
+      "description": "Considera apenas os empregados que tiveram saltos maior ou igual a 4\n\nFiltros:\n- Regional <br>\n- Diretoria <br>\n- Superintendencia <br>\n- Lotação  <br>\n- Cargo  <br>",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 5,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-yellow",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 25
+              },
+              {
+                "color": "dark-red",
+                "value": 30
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "competencia"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time:MM/YYYY"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "valor_fca_fct_gfe"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "locale"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 42
+      },
+      "id": 1983,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH niveis_com_salto AS (\n    SELECT \n        competencia, matricula, sigla_regional, diretoria, \n        superintendencia,\n        lotacao_hierarquica, cargo, nivel_fca_fct_gfe, \n        valor_fca_fct_gfe, data_designacao_fct, data_destituicao_fct,\n        LAG(nivel_fca_fct_gfe) OVER (PARTITION BY matricula ORDER BY competencia) AS nivel_anterior\n    FROM \n        gratificacao\n    WHERE \n    sigla_regional IN ($sigla_regional)     \n    AND\n    diretoria IN ($diretoria) \n    AND superintendencia IN ($superintendencia)      \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)         \n)\nSELECT competencia as time, AVG(nivel_fca_fct_gfe) AS media_nivel_fca_fct_gfe\nFROM \n    niveis_com_salto\nWHERE \n    (nivel_fca_fct_gfe - nivel_anterior) >= 4 -- Salto de 4 ou mais níveis\nGROUP BY 1\norder by 1 asc;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Média histórica das FCTs (Apenas para \"Salto de gratificação acima de 3 níveis\")",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {
+              "cargo": 6,
+              "competencia": 0,
+              "data_designacao_fct": 9,
+              "data_destituicao_fct": 10,
+              "diretoria": 3,
+              "lotacao_hierarquica": 5,
+              "matricula": 1,
+              "nivel_fca_fct_gfe": 7,
+              "sigla_regional": 2,
+              "superintendencia": 4,
+              "valor_fca_fct_gfe": 8
+            },
+            "renameByName": {
+              "media_nivel_fca_fct_gfe": "Média para os empregados que tiveram saltos acima de 3 (>=4)"
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 47
+      },
+      "id": 8,
+      "panels": [],
+      "title": "FCT por Regional",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PCC52D03280B7034C"
+      },
+      "description": "Filtros: <br>\n- Competência <br>\n- Incluir FCT Zerad: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 5,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-yellow",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 25
+              },
+              {
+                "color": "dark-red",
+                "value": 30
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "competencia"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time:MM/YYYY"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "valor_fca_fct_gfe"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "locale"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 0,
+        "y": 48
+      },
+      "id": 1600,
+      "maxPerRow": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.4.0",
+      "repeat": "sigla_regional",
+      "repeatDirection": "h",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT competencia as time, AVG(nivel_fca_fct_gfe) AS media_nivel_fca_fct_gfe\n    FROM gratificacao\n    WHERE \n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)       \nGROUP BY 1\norder by 1 asc   ;\n    ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "$sigla_regional (Média Histórica)",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {
+              "cargo": 6,
+              "competencia": 0,
+              "data_designacao_fct": 9,
+              "data_destituicao_fct": 10,
+              "diretoria": 3,
+              "lotacao_hierarquica": 5,
+              "matricula": 1,
+              "nivel_fca_fct_gfe": 7,
+              "sigla_regional": 2,
+              "superintendencia": 4,
+              "valor_fca_fct_gfe": 8
+            },
+            "renameByName": {
+              "media_nivel_fca_fct_gfe": "Média histórica"
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PCC52D03280B7034C"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-yellow",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 20
+              },
+              {
+                "color": "red",
+                "value": 25
+              },
+              {
+                "color": "dark-red",
+                "value": 30
+              }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 2,
+        "x": 0,
+        "y": 58
+      },
+      "id": 9,
+      "maxPerRow": 12,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.0",
+      "repeat": "sigla_regional",
+      "repeatDirection": "h",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT AVG(nivel_fca_fct_gfe) AS media_nivel_fca_fct_gfe\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria)    \n    AND superintendencia IN ($superintendencia)        \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)       ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "$sigla_regional (Média)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PCC52D03280B7034C"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-yellow",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 20
+              },
+              {
+                "color": "red",
+                "value": 25
+              },
+              {
+                "color": "dark-red",
+                "value": 30
+              }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 2,
+        "x": 0,
+        "y": 63
+      },
+      "id": 73,
+      "maxPerRow": 12,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.0",
+      "repeat": "sigla_regional",
+      "repeatDirection": "h",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT MAX(nivel_fca_fct_gfe) AS media_nivel_fca_fct_gfe\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria) \n    AND superintendencia IN ($superintendencia)               \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)       ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "$sigla_regional (Máxima)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PCC52D03280B7034C"
+      },
+      "description": "Incluindo FCTs zeradas? $zero",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-yellow",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 20
+              },
+              {
+                "color": "red",
+                "value": 25
+              },
+              {
+                "color": "dark-red",
+                "value": 30
+              }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 2,
+        "x": 0,
+        "y": 66
+      },
+      "id": 81,
+      "maxPerRow": 12,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.0",
+      "repeat": "sigla_regional",
+      "repeatDirection": "h",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT MIN(nivel_fca_fct_gfe) AS media_nivel_fca_fct_gfe\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria)      \n    AND superintendencia IN ($superintendencia)      \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)       ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "$sigla_regional (Mínima)",
+      "type": "stat"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 69
+      },
+      "id": 415,
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "gridPos": {
+            "h": 2,
+            "w": 24,
+            "x": 0,
+            "y": 4
+          },
+          "id": 422,
+          "options": {
+            "code": {
+              "language": "plaintext",
+              "showLineNumbers": false,
+              "showMiniMap": false
+            },
+            "content": "<div style=\"padding-top: 10px;width: 100%; height: 100%; border: 1;background-color: #D0D0D0; text-align: center;\">\n<h1>\n    <span style=\"font-weight:bolder;color: red;\">\n        Média Histórica\n    </span>    \n</h1>\n</div>\n\n\n",
+            "mode": "html"
+          },
+          "pluginVersion": "10.4.0",
+          "type": "text"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "description": "Filtros: <br>\n- Competência <br>\n- Incluir FCT Zerad: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 5,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "dark-yellow"
+                  },
+                  {
+                    "color": "red",
+                    "value": 25
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 30
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "competencia"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "time:MM/YYYY"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "valor_fca_fct_gfe"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "locale"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 4,
+            "x": 0,
+            "y": 6
+          },
+          "id": 896,
+          "maxPerRow": 6,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "10.4.0",
+          "repeat": "superintendencia",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "PCC52D03280B7034C"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT competencia as time, AVG(nivel_fca_fct_gfe) AS media_nivel_fca_fct_gfe\n    FROM gratificacao\n    WHERE \n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria)    \n    AND superintendencia IN ($superintendencia)        \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)           \nGROUP BY 1\norder by 1 asc   ;\n    ",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "$superintendencia",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {},
+                "includeByName": {},
+                "indexByName": {
+                  "cargo": 6,
+                  "competencia": 0,
+                  "data_designacao_fct": 9,
+                  "data_destituicao_fct": 10,
+                  "diretoria": 3,
+                  "lotacao_hierarquica": 5,
+                  "matricula": 1,
+                  "nivel_fca_fct_gfe": 7,
+                  "sigla_regional": 2,
+                  "superintendencia": 4,
+                  "valor_fca_fct_gfe": 8
+                },
+                "renameByName": {
+                  "media_nivel_fca_fct_gfe": "Média histórica"
+                }
+              }
+            }
+          ],
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "gridPos": {
+            "h": 2,
+            "w": 24,
+            "x": 0,
+            "y": 56
+          },
+          "id": 1109,
+          "options": {
+            "code": {
+              "language": "plaintext",
+              "showLineNumbers": false,
+              "showMiniMap": false
+            },
+            "content": "<div style=\"padding-top: 10px;width: 100%; height: 100%; border: 1;background-color: #D0D0D0; text-align: center;\">\n<h1>\n    <span style=\"font-weight:bolder;color: red;\">\n        Média\n    </span>    \n</h1>\n</div>\n\n\n",
+            "mode": "html"
+          },
+          "pluginVersion": "10.4.0",
+          "type": "text"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "dark-yellow"
+                  },
+                  {
+                    "color": "orange",
+                    "value": 20
+                  },
+                  {
+                    "color": "red",
+                    "value": 25
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 30
+                  }
+                ]
+              },
+              "unit": "locale"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 2,
+            "x": 0,
+            "y": 58
+          },
+          "id": 416,
+          "maxPerRow": 12,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.0",
+          "repeat": "superintendencia",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "PCC52D03280B7034C"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT AVG(nivel_fca_fct_gfe) AS media_nivel_fca_fct_gfe\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria)    \n    AND superintendencia IN ($superintendencia)        \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)    \n    order by 1 desc   ",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "$superintendencia (Média)",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "gridPos": {
+            "h": 2,
+            "w": 24,
+            "x": 0,
+            "y": 73
+          },
+          "id": 426,
+          "options": {
+            "code": {
+              "language": "plaintext",
+              "showLineNumbers": false,
+              "showMiniMap": false
+            },
+            "content": "<div style=\"padding-top: 10px;width: 100%; height: 100%; border: 1;background-color: #D0D0D0; text-align: center;\">\n<h1>\n    <span style=\"font-weight:bolder;color: red;\">\n        Máxima\n    </span>    \n</h1>\n</div>\n\n\n",
+            "mode": "html"
+          },
+          "pluginVersion": "10.4.0",
+          "type": "text"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "dark-yellow"
+                  },
+                  {
+                    "color": "orange",
+                    "value": 20
+                  },
+                  {
+                    "color": "red",
+                    "value": 25
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 30
+                  }
+                ]
+              },
+              "unit": "locale"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 2,
+            "x": 0,
+            "y": 75
+          },
+          "id": 417,
+          "maxPerRow": 12,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.0",
+          "repeat": "superintendencia",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "PCC52D03280B7034C"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT MAX(nivel_fca_fct_gfe) AS media_nivel_fca_fct_gfe\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria) \n    AND superintendencia IN ($superintendencia)               \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)       ",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "$superintendencia (Máxima)",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "gridPos": {
+            "h": 2,
+            "w": 24,
+            "x": 0,
+            "y": 90
+          },
+          "id": 427,
+          "options": {
+            "code": {
+              "language": "plaintext",
+              "showLineNumbers": false,
+              "showMiniMap": false
+            },
+            "content": "<div style=\"padding-top: 10px;width: 100%; height: 100%; border: 1;background-color: #D0D0D0; text-align: center;\">\n<h1>\n    <span style=\"font-weight:bolder;color: red;\">\n        Mínima\n    </span>    \n</h1>\n</div>\n\n\n",
+            "mode": "html"
+          },
+          "pluginVersion": "10.4.0",
+          "type": "text"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "description": "Incluindo FCTs zeradas? $zero",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "dark-yellow"
+                  },
+                  {
+                    "color": "orange",
+                    "value": 20
+                  },
+                  {
+                    "color": "red",
+                    "value": 25
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 30
+                  }
+                ]
+              },
+              "unit": "locale"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 2,
+            "x": 0,
+            "y": 92
+          },
+          "id": 418,
+          "maxPerRow": 12,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.0",
+          "repeat": "superintendencia",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "PCC52D03280B7034C"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT MIN(nivel_fca_fct_gfe) AS media_nivel_fca_fct_gfe\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria)      \n    AND superintendencia IN ($superintendencia)      \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)       ",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "$superintendencia (Mínima)",
+          "type": "stat"
+        }
+      ],
+      "title": "FCT por Superintendência",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 70
+      },
+      "id": 47,
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "description": "Filtros: <br>\n- Competência <br>\n- Incluir FCT Zerad: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 5,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "dark-yellow"
+                  },
+                  {
+                    "color": "red",
+                    "value": 25
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 30
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "competencia"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "time:MM/YYYY"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "valor_fca_fct_gfe"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "locale"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 3,
+            "x": 0,
+            "y": 5
+          },
+          "id": 1645,
+          "maxPerRow": 12,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "10.4.0",
+          "repeat": "diretoria",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "PCC52D03280B7034C"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT competencia as time, AVG(nivel_fca_fct_gfe) AS media_nivel_fca_fct_gfe\n    FROM gratificacao\n    WHERE \n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    diretoria IN ($diretoria)        \nGROUP BY 1\norder by 1 asc   ;\n    ",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "$diretoria (Média Histórica)",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {},
+                "includeByName": {},
+                "indexByName": {
+                  "cargo": 6,
+                  "competencia": 0,
+                  "data_designacao_fct": 9,
+                  "data_destituicao_fct": 10,
+                  "diretoria": 3,
+                  "lotacao_hierarquica": 5,
+                  "matricula": 1,
+                  "nivel_fca_fct_gfe": 7,
+                  "sigla_regional": 2,
+                  "superintendencia": 4,
+                  "valor_fca_fct_gfe": 8
+                },
+                "renameByName": {
+                  "media_nivel_fca_fct_gfe": "Média histórica"
+                }
+              }
+            }
+          ],
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "dark-yellow"
+                  },
+                  {
+                    "color": "orange",
+                    "value": 20
+                  },
+                  {
+                    "color": "red",
+                    "value": 25
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 30
+                  }
+                ]
+              },
+              "unit": "locale"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 3,
+            "x": 0,
+            "y": 10
+          },
+          "id": 50,
+          "maxPerRow": 12,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.0",
+          "repeat": "diretoria",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "PCC52D03280B7034C"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT AVG(nivel_fca_fct_gfe) AS media_nivel_fca_fct_gfe\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria)   \n    AND superintendencia IN ($superintendencia)             \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)       ",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "$diretoria (Média)",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "dark-yellow"
+                  },
+                  {
+                    "color": "orange",
+                    "value": 20
+                  },
+                  {
+                    "color": "red",
+                    "value": 25
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 30
+                  }
+                ]
+              },
+              "unit": "locale"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 3,
+            "x": 0,
+            "y": 15
+          },
+          "id": 122,
+          "maxPerRow": 12,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.0",
+          "repeat": "diretoria",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "PCC52D03280B7034C"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT MAX(nivel_fca_fct_gfe) AS media_nivel_fca_fct_gfe\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND    \n    diretoria IN ($diretoria)      \n    AND superintendencia IN ($superintendencia)          \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)       ",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "$diretoria (Máxima)",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "description": "Incluindo FCTs zeradas? $zero",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "dark-yellow"
+                  },
+                  {
+                    "color": "orange",
+                    "value": 20
+                  },
+                  {
+                    "color": "red",
+                    "value": 25
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 30
+                  }
+                ]
+              },
+              "unit": "locale"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 3,
+            "x": 0,
+            "y": 18
+          },
+          "id": 130,
+          "maxPerRow": 12,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.0",
+          "repeat": "diretoria",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "PCC52D03280B7034C"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT MIN(nivel_fca_fct_gfe) AS media_nivel_fca_fct_gfe\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria)      \n    AND superintendencia IN ($superintendencia)          \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)       ",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "$diretoria (Mínima)",
+          "type": "stat"
+        }
+      ],
+      "title": "FCT por Diretoria",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 71
+      },
+      "id": 21,
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "description": "Filtros: <br>\n- Competência <br>\n- Incluir FCT Zerad: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 5,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "dark-yellow"
+                  },
+                  {
+                    "color": "red",
+                    "value": 25
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 30
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "competencia"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "time:MM/YYYY"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "valor_fca_fct_gfe"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "locale"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 8,
+            "x": 0,
+            "y": 6
+          },
+          "id": 1724,
+          "maxPerRow": 12,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "10.4.0",
+          "repeat": "cargo",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "PCC52D03280B7034C"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT competencia as time, AVG(nivel_fca_fct_gfe) AS media_nivel_fca_fct_gfe\n    FROM gratificacao\n    WHERE \n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    diretoria IN ($diretoria)        \nGROUP BY 1\norder by 1 asc   ;\n    ",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "$cargo (Média Histórica)",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {},
+                "includeByName": {},
+                "indexByName": {
+                  "cargo": 6,
+                  "competencia": 0,
+                  "data_designacao_fct": 9,
+                  "data_destituicao_fct": 10,
+                  "diretoria": 3,
+                  "lotacao_hierarquica": 5,
+                  "matricula": 1,
+                  "nivel_fca_fct_gfe": 7,
+                  "sigla_regional": 2,
+                  "superintendencia": 4,
+                  "valor_fca_fct_gfe": 8
+                },
+                "renameByName": {
+                  "media_nivel_fca_fct_gfe": "Média histórica"
+                }
+              }
+            }
+          ],
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "dark-yellow"
+                  },
+                  {
+                    "color": "orange",
+                    "value": 20
+                  },
+                  {
+                    "color": "red",
+                    "value": 25
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 30
+                  }
+                ]
+              },
+              "unit": "locale"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 8,
+            "x": 0,
+            "y": 11
+          },
+          "id": 33,
+          "maxPerRow": 12,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.0",
+          "repeat": "cargo",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "PCC52D03280B7034C"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT AVG(nivel_fca_fct_gfe) AS media_nivel_fca_fct_gfe\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria)      \n    AND superintendencia IN ($superintendencia)          \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)       ",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "$cargo (Média)",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "dark-yellow"
+                  },
+                  {
+                    "color": "orange",
+                    "value": 20
+                  },
+                  {
+                    "color": "red",
+                    "value": 25
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 30
+                  }
+                ]
+              },
+              "unit": "locale"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 8,
+            "x": 0,
+            "y": 16
+          },
+          "id": 220,
+          "maxPerRow": 12,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.0",
+          "repeat": "cargo",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "PCC52D03280B7034C"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT MAX(nivel_fca_fct_gfe) AS media_nivel_fca_fct_gfe\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria)      \n    AND superintendencia IN ($superintendencia)      \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)       ",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "$cargo (Máxima)",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "description": "Incluindo FCTs zeradas? $zero",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "dark-yellow"
+                  },
+                  {
+                    "color": "orange",
+                    "value": 20
+                  },
+                  {
+                    "color": "red",
+                    "value": 25
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 30
+                  }
+                ]
+              },
+              "unit": "locale"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 8,
+            "x": 0,
+            "y": 19
+          },
+          "id": 221,
+          "maxPerRow": 12,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.0",
+          "repeat": "cargo",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "PCC52D03280B7034C"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT MIN(nivel_fca_fct_gfe) AS media_nivel_fca_fct_gfe\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria)      \n    AND superintendencia IN ($superintendencia)      \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)       ",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "$cargo (Mínima)",
+          "type": "stat"
+        }
+      ],
+      "title": "FCT por Cargo",
+      "type": "row"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "12/2024",
+          "value": "12/2024"
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "PCC52D03280B7034C"
+        },
+        "definition": "SELECT DISTINCT on (competencia)\n    TO_CHAR(competencia, 'MM/YYYY') AS competencia_formatada\nFROM \n    gratificacao\nORDER BY \n    competencia DESC;",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Competência",
+        "multi": false,
+        "name": "competencia",
+        "options": [],
+        "query": "SELECT DISTINCT on (competencia)\n    TO_CHAR(competencia, 'MM/YYYY') AS competencia_formatada\nFROM \n    gratificacao\nORDER BY \n    competencia DESC;",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Não",
+          "value": "Não"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Incluir FCT Zerada",
+        "multi": false,
+        "name": "zero",
+        "options": [
+          {
+            "selected": false,
+            "text": "Sim",
+            "value": "Sim"
+          },
+          {
+            "selected": true,
+            "text": "Não",
+            "value": "Não"
+          }
+        ],
+        "query": "Sim, Não",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "allValue": "",
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "PCC52D03280B7034C"
+        },
+        "definition": "SELECT DISTINCT on (sigla_regional) sigla_regional    \nFROM \n    gratificacao\nWHERE competencia = TO_DATE('$competencia', 'MM/YYYY');",
+        "description": "Filtrado de acordo com a competência",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Regional",
+        "multi": true,
+        "name": "sigla_regional",
+        "options": [],
+        "query": "SELECT DISTINCT on (sigla_regional) sigla_regional    \nFROM \n    gratificacao\nWHERE competencia = TO_DATE('$competencia', 'MM/YYYY');",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "PCC52D03280B7034C"
+        },
+        "definition": "SELECT DISTINCT on (diretoria) diretoria FROM gratificacao\nWHERE competencia = TO_DATE('$competencia', 'MM/YYYY');",
+        "description": "Filtrado de acordo com a competência",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Diretoria",
+        "multi": true,
+        "name": "diretoria",
+        "options": [],
+        "query": "SELECT DISTINCT on (diretoria) diretoria FROM gratificacao\nWHERE competencia = TO_DATE('$competencia', 'MM/YYYY');",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "PCC52D03280B7034C"
+        },
+        "definition": "SELECT DISTINCT on (superintendencia) superintendencia FROM gratificacao\nWHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)     \n    AND\n    diretoria IN ($diretoria) ",
+        "description": "Filtrado de acordo com a competência e diretoria",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Superintendência",
+        "multi": true,
+        "name": "superintendencia",
+        "options": [],
+        "query": "SELECT DISTINCT on (superintendencia) superintendencia FROM gratificacao\nWHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)     \n    AND\n    diretoria IN ($diretoria) ",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "PCC52D03280B7034C"
+        },
+        "definition": "SELECT DISTINCT on (lotacao_hierarquica) lotacao_hierarquica FROM gratificacao\nWHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)     \n    AND\n    diretoria IN ($diretoria)      \n    AND\n    superintendencia IN ($superintendencia)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Lotação",
+        "multi": true,
+        "name": "lotacao_hierarquica",
+        "options": [],
+        "query": "SELECT DISTINCT on (lotacao_hierarquica) lotacao_hierarquica FROM gratificacao\nWHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)     \n    AND\n    diretoria IN ($diretoria)      \n    AND\n    superintendencia IN ($superintendencia)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "PCC52D03280B7034C"
+        },
+        "definition": "SELECT DISTINCT on (cargo) cargo FROM gratificacao\nWHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)     \n    AND\n    diretoria IN ($diretoria)  ",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Cargo",
+        "multi": true,
+        "name": "cargo",
+        "options": [],
+        "query": "SELECT DISTINCT on (cargo) cargo FROM gratificacao\nWHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)     \n    AND\n    diretoria IN ($diretoria)  ",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "",
+          "value": ""
+        },
+        "description": "Preencha uma matrícula para visualizar o histórico",
+        "hide": 0,
+        "label": "Matrícula",
+        "name": "matricula",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "skipUrlSync": false,
+        "type": "textbox"
+      }
+    ]
+  },
+  "time": {
+    "from": "2020-01-01T00:00:00.000Z",
+    "to": "2024-12-01T00:00:00.000Z"
+  },
+  "timepicker": {
+    "hidden": true
+  },
+  "timezone": "utc",
+  "title": "Home",
+  "uid": "fct",
+  "version": 1,
+  "weekStart": ""
+}

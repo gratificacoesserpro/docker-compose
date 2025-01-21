@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgresql_db:
+    image: postgres:13    
+    container_name: postgresql_db
+    environment:
+      POSTGRES_USER: user_fct
+      POSTGRES_PASSWORD: dgtrP(8SYrf35j@
+      POSTGRES_DB: gratificacoes_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./lai_120282.csv:/docker-entrypoint-initdb.d/lai_120282.csv   # Mapeia o CSV para dentro do contêiner
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql               # Mapeia o script SQL
+      - ./load_csv.sh:/docker-entrypoint-initdb.d/load_csv.sh         # Mapeia o script Shell
+    networks:
+      - grafana-network
+    restart: always      
+  grafana:
+    image: grafana/grafana:10.4.0  # Usando a versão mais recente do Grafana
+    container_name: grafana
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin2  # Senha do administrador do Grafana
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/home.json
+    ports:
+      - "3000:3000"  # Porta para acessar o Grafana
+    depends_on:
+      - postgresql_db
+    volumes:
+      - ./datasources:/etc/grafana/provisioning/datasources     # Monta o diretório de fontes de dados
+      - ./dashboards_provider:/etc/grafana/provisioning/dashboards       # Monta o diretório de dashboards
+      - ./dashboards:/var/lib/grafana/dashboards       # Monta o diretório de dashboards            
+    networks:
+      - grafana-network
+    restart: always
+networks:
+  grafana-network:
+    driver: bridge
+      

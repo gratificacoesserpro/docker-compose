@@ -1,0 +1,15 @@
+apiVersion: 1
+
+datasources:
+  - name: PostgreSQL
+    type: postgres
+    access: proxy
+    url: postgresql_db:5432
+    database: gratificacoes_db
+    user: user_fct
+    password: dgtrP(8SYrf35j@
+    basicAuth: false
+    isDefault: true
+    jsonData:
+      sslmode: disable
+
