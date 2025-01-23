@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: dgtrP(8SYrf35j@
       POSTGRES_DB: gratificacoes_db
     ports:
-      - "5432:5432"
+      - "5234:5234"
     volumes:
       - ./lai_120282.csv:/docker-entrypoint-initdb.d/lai_120282.csv   # Mapeia o CSV para dentro do contêiner
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql               # Mapeia o script SQL
@@ -23,6 +23,7 @@ services:
     environment:
       GF_SECURITY_ADMIN_PASSWORD: admin2  # Senha do administrador do Grafana
       GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/home.json
+      GF_LOG_LEVEL: warn
     ports:
       - "3000:3000"  # Porta para acessar o Grafana
     depends_on:

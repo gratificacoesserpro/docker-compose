@@ -58,7 +58,20 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "links": [],
+  "links": [
+    {
+      "asDropdown": true,
+      "icon": "dashboard",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": false,
+      "title": "",
+      "tooltip": "Limpar Filtros",
+      "type": "link",
+      "url": "/?orgId=1"
+    }
+  ],
   "panels": [
     {
       "collapsed": false,
@@ -580,6 +593,7 @@
           ],
           "show": false
         },
+        "frameIndex": 0,
         "showHeader": true,
         "sortBy": [
           {
@@ -599,8 +613,37 @@
           "format": "table",
           "hide": false,
           "rawQuery": true,
-          "rawSql": "SELECT competencia, matricula, sigla_regional, diretoria, \n        superintendencia,\n        lotacao_hierarquica, cargo, nivel_fca_fct_gfe, \n    valor_fca_fct_gfe, data_designacao_fct, data_destituicao_fct\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)     \n    AND\n    diretoria IN ($diretoria) \n    AND superintendencia IN ($superintendencia)      \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)    \n    ORDER BY competencia DESC, sigla_regional asc, diretoria asc, lotacao_hierarquica asc, nivel_fca_fct_gfe desc, cargo ASC, matricula asc",
+          "rawSql": "SELECT competencia, matricula, sigla_regional, diretoria, \n        superintendencia,\n        lotacao_hierarquica, cargo, nivel_fca_fct_gfe, \n    valor_fca_fct_gfe, data_designacao_fct, data_destituicao_fct\n    FROM gratificacao\n    WHERE \n    '$matricula' = ''\n    AND\n    competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)     \n    AND\n    diretoria IN ($diretoria) \n    AND superintendencia IN ($superintendencia)      \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)    \n    ORDER BY competencia DESC, sigla_regional asc, diretoria asc, lotacao_hierarquica asc, nivel_fca_fct_gfe desc, cargo ASC, matricula asc\n    ",
           "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT competencia, matricula, sigla_regional, diretoria, \n        superintendencia,\n        lotacao_hierarquica, cargo, nivel_fca_fct_gfe, \n    valor_fca_fct_gfe, data_designacao_fct, data_destituicao_fct\n    FROM gratificacao\n    WHERE '$matricula' != ''\n    AND\n    LPAD(matricula::TEXT, 10, '0') = LPAD('$matricula'::TEXT, 10, '0');\n",
+          "refId": "B",
           "sql": {
             "columns": [
               {
@@ -622,6 +665,10 @@
       ],
       "title": "Dados de acordo com os filtros",
       "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
         {
           "id": "organize",
           "options": {
@@ -663,7 +710,7 @@
         "type": "grafana-postgresql-datasource",
         "uid": "PCC52D03280B7034C"
       },
-      "description": "",
+      "description": "Todas as competências. \n\nFiltros: <br>\n- Incluir FCT Zerad: $zero",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -798,7 +845,7 @@
           }
         }
       ],
-      "title": "Média histórica das FCTs",
+      "title": "Média histórica das Gratificações",
       "transformations": [
         {
           "id": "organize",
@@ -836,7 +883,7 @@
       },
       "id": 543,
       "panels": [],
-      "title": "Histórico de FCT por Matrícula",
+      "title": "Histórico de Gratificação por Matrícula",
       "type": "row"
     },
     {
@@ -1080,8 +1127,37 @@
           "format": "table",
           "hide": false,
           "rawQuery": true,
-          "rawSql": "WITH niveis_com_salto AS (\n    SELECT \n        competencia, matricula, sigla_regional, diretoria, \n        superintendencia,\n        lotacao_hierarquica, cargo, nivel_fca_fct_gfe, \n        valor_fca_fct_gfe, data_designacao_fct, data_destituicao_fct,\n        LAG(nivel_fca_fct_gfe) OVER (PARTITION BY matricula ORDER BY competencia) AS nivel_anterior\n    FROM \n        gratificacao\n    WHERE \n    sigla_regional IN ($sigla_regional)     \n    AND diretoria IN ($diretoria) \n    AND superintendencia IN ($superintendencia)      \n    AND lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND cargo IN ($cargo)         \n)\nSELECT \n    competencia, matricula, sigla_regional, diretoria, \n    superintendencia,\n    lotacao_hierarquica, \n    cargo, \n    nivel_fca_fct_gfe, \n    valor_fca_fct_gfe, \n    data_designacao_fct, \n    data_destituicao_fct,\n    nivel_anterior,\n    (nivel_fca_fct_gfe - nivel_anterior) AS salto\nFROM \n    niveis_com_salto\nWHERE \n    (nivel_fca_fct_gfe - nivel_anterior) >= 4 -- Salto de 4 ou mais níveis\nOrder by salto desc, competencia desc, sigla_regional, diretoria, superintendencia\n \n    ",
+          "rawSql": "WITH niveis_com_salto AS (\n    SELECT \n        competencia, matricula, sigla_regional, diretoria, \n        superintendencia,\n        lotacao_hierarquica, cargo, nivel_fca_fct_gfe, \n        valor_fca_fct_gfe, data_designacao_fct, data_destituicao_fct,\n        LAG(nivel_fca_fct_gfe) OVER (PARTITION BY matricula ORDER BY competencia) AS nivel_anterior\n    FROM \n        gratificacao\n    WHERE '$matricula' = ''\n    AND sigla_regional IN ($sigla_regional)     \n    AND diretoria IN ($diretoria) \n    AND superintendencia IN ($superintendencia)      \n    AND lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND cargo IN ($cargo)         \n)\nSELECT \n    competencia, matricula, sigla_regional, diretoria, \n    superintendencia,\n    lotacao_hierarquica, \n    cargo, \n    nivel_fca_fct_gfe, \n    valor_fca_fct_gfe, \n    data_designacao_fct, \n    data_destituicao_fct,\n    nivel_anterior,\n    (nivel_fca_fct_gfe - nivel_anterior) AS salto\nFROM \n    niveis_com_salto\nWHERE \n    (nivel_fca_fct_gfe - nivel_anterior) >= 4 -- Salto de 4 ou mais níveis\nOrder by salto desc, competencia desc, sigla_regional, diretoria, superintendencia\n \n    ",
           "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH niveis_com_salto AS (\n    SELECT \n        competencia, matricula, sigla_regional, diretoria, \n        superintendencia,\n        lotacao_hierarquica, cargo, nivel_fca_fct_gfe, \n        valor_fca_fct_gfe, data_designacao_fct, data_destituicao_fct,\n        LAG(nivel_fca_fct_gfe) OVER (PARTITION BY matricula ORDER BY competencia) AS nivel_anterior\n    FROM \n        gratificacao\n    WHERE '$matricula' != ''\n    AND\n    LPAD(matricula::TEXT, 10, '0') = LPAD('$matricula'::TEXT, 10, '0')\n)\nSELECT \n    competencia, matricula, sigla_regional, diretoria, \n    superintendencia,\n    lotacao_hierarquica, \n    cargo, \n    nivel_fca_fct_gfe, \n    valor_fca_fct_gfe, \n    data_designacao_fct, \n    data_destituicao_fct,\n    nivel_anterior,\n    (nivel_fca_fct_gfe - nivel_anterior) AS salto\nFROM \n    niveis_com_salto\nWHERE \n    (nivel_fca_fct_gfe - nivel_anterior) >= 4 -- Salto de 4 ou mais níveis\nOrder by salto desc, competencia desc, sigla_regional, diretoria, superintendencia\n \n    ",
+          "refId": "B",
           "sql": {
             "columns": [
               {
@@ -1103,6 +1179,10 @@
       ],
       "title": "Salto de gratificação acima de 3 níveis",
       "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
         {
           "id": "organize",
           "options": {
@@ -1254,7 +1334,7 @@
           "format": "table",
           "hide": false,
           "rawQuery": true,
-          "rawSql": "SELECT competencia as time, nivel_fca_fct_gfe    \n    FROM gratificacao\n    WHERE matricula = '$matricula'\n    order by 1 asc   \n    ",
+          "rawSql": "SELECT competencia as time, nivel_fca_fct_gfe    \n    FROM gratificacao\n    WHERE \n    LPAD(matricula::TEXT, 10, '0') = LPAD('$matricula'::TEXT, 10, '0')\n    order by 1 asc   \n    ",
           "refId": "A",
           "sql": {
             "columns": [

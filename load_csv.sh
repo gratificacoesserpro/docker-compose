@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Configura os pg_hba.conf para permitir todas as conexões
+echo "host  all all all          trust" > /var/lib/postgresql/data/pg_hba.conf
+echo "local all all              trust" >> /var/lib/postgresql/data/pg_hba.conf
+echo "host  all all 127.0.0.1/32 trust" >> /var/lib/postgresql/data/pg_hba.conf
+echo "host  all all ::1/128      trust" >> /var/lib/postgresql/data/pg_hba.conf
+echo "Configuração do pg_hba.conf concluída!"
+
 # Espera o PostgreSQL iniciar completamente antes de rodar o comando COPY
 echo "Aguardando o PostgreSQL iniciar..."
 for i in {1..30}; do
@@ -63,12 +70,4 @@ FROM temp_gratificacao;
 DROP TABLE temp_gratificacao;
 ";
 
-echo "Importação do CSV concluída!"
-
-echo "host all all all trust" > /var/lib/postgresql/data/pg_hba.conf
-
-echo "Configuração do pg_hba.conf concluída!"
-
-
-
-   
+echo "Importação do CSV concluída!"  
