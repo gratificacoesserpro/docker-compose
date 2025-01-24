@@ -91,7 +91,7 @@
         "type": "grafana-postgresql-datasource",
         "uid": "PCC52D03280B7034C"
       },
-      "description": "<br>\nFiltros: <br>\n- Competência <br>\n- Incluir FCT Zerad: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+      "description": "<br>\nFiltros: <br>\n- Competência <br>\n- Incluir FCT Zerada: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -121,7 +121,7 @@
       },
       "gridPos": {
         "h": 5,
-        "w": 6,
+        "w": 5,
         "x": 0,
         "y": 1
       },
@@ -181,7 +181,103 @@
         "type": "grafana-postgresql-datasource",
         "uid": "PCC52D03280B7034C"
       },
-      "description": "Filtros: <br>\n- Competência <br>\n- Incluir FCT Zerad: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+      "description": "Filtros: <br>\n- Competência <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-yellow",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 20
+              },
+              {
+                "color": "red",
+                "value": 25
+              },
+              {
+                "color": "dark-red",
+                "value": 30
+              }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 5,
+        "y": 1
+      },
+      "id": 2080,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Valor total R\\$ das gratificações$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT SUM(valor_fca_fct_gfe) AS \"Valor total R$ das gratificações\"\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria)      \n    AND superintendencia IN ($superintendencia)      \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)       ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Valor Total das Gratificações (R$)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PCC52D03280B7034C"
+      },
+      "description": "Filtros: <br>\n- Competência <br>\n- Incluir FCT Zerada: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -216,8 +312,8 @@
       },
       "gridPos": {
         "h": 5,
-        "w": 5,
-        "x": 6,
+        "w": 3,
+        "x": 9,
         "y": 1
       },
       "id": 4,
@@ -276,7 +372,102 @@
         "type": "grafana-postgresql-datasource",
         "uid": "PCC52D03280B7034C"
       },
-      "description": "<br>\nFiltros: <br>\n- Competência <br>\n- Incluir FCT Zerad: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+      "description": "Filtros: <br>\n- Competência <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-yellow",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 20
+              },
+              {
+                "color": "red",
+                "value": 25
+              },
+              {
+                "color": "dark-red",
+                "value": 30
+              }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 3,
+        "x": 12,
+        "y": 1
+      },
+      "id": 2081,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT AVG(valor_fca_fct_gfe) AS \"Valor total R$ das gratificações\"\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria)      \n    AND superintendencia IN ($superintendencia)      \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)       ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Valor médio das gratificações (R$)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PCC52D03280B7034C"
+      },
+      "description": "<br>\nFiltros: <br>\n- Competência <br>\n- Incluir FCT Zerada: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -312,7 +503,7 @@
       "gridPos": {
         "h": 5,
         "w": 2,
-        "x": 11,
+        "x": 15,
         "y": 1
       },
       "id": 5,
@@ -371,7 +562,7 @@
         "type": "grafana-postgresql-datasource",
         "uid": "PCC52D03280B7034C"
       },
-      "description": "<br>\nFiltros: <br>\n- Competência <br>\n- Incluir FCT Zerad: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+      "description": "<br>\nFiltros: <br>\n- Competência <br>\n- Incluir FCT Zerada: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -407,7 +598,7 @@
       "gridPos": {
         "h": 5,
         "w": 2,
-        "x": 13,
+        "x": 17,
         "y": 1
       },
       "id": 6,
@@ -466,12 +657,336 @@
         "type": "grafana-postgresql-datasource",
         "uid": "PCC52D03280B7034C"
       },
+      "description": "Peão: Corpo Funcional, ou seja possui Gratificação designada<br>\nRei: Corpo Gerencial. Ou seja, gratificação igual a zero. \n<br>\nObs.: Existem empregados sem designação de gratificação, mas é bem raro. \n<br>\n\n<br>\n<br>\nFiltros: <br>\n- Competência <br>\n- Incluir FCT Zerada: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "unit": "locale"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Rei"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Peão"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 3,
+        "x": 19,
+        "y": 1
+      },
+      "id": 2084,
+      "options": {
+        "displayLabels": [
+          "percent",
+          "value"
+        ],
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false,
+          "values": [
+            "percent",
+            "value"
+          ]
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT count(*) as \"Peão\"\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    nivel_fca_fct_gfe > 0        \n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria)      \n    AND superintendencia IN ($superintendencia)      \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)       ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT count(*)  as \"Rei\"\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    nivel_fca_fct_gfe = 0        \n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria)      \n    AND superintendencia IN ($superintendencia)      \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)       ",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Funcional X Gerencial",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PCC52D03280B7034C"
+      },
+      "description": "Relação de Corpo Funcional por Gerencial. Ou seja, existem (em média) quantos empregados para cada Gerente/Chefe?\n<br><br>\nPeão: Corpo Funcional, ou seja possui Gratificação designada<br>\nRei: Corpo Gerencial. Ou seja, gratificação igual a zero. \n<br><br>\nObs.: Existem empregados sem designação de gratificação, mas é bem raro. \n<br>\nObs2.: Esse número não indica que as chefias (imediatas) possuem N empregados em média, pois existem níveis hierárquico na estrutura da Empresa. Mas mostra claramente que a Empresa possui muitos \"chefes\"...\n\n<br>\nFiltros: <br>\n- Competência <br>\n- Incluir FCT Zerada: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-orange",
+                "value": null
+              }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Rei"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Peão"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "C"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "none"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 2,
+        "x": 22,
+        "y": 1
+      },
+      "id": 2086,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "SELECT count(*) as \"Peão\"\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    nivel_fca_fct_gfe > 0        \n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria)      \n    AND superintendencia IN ($superintendencia)      \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)       ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "SELECT count(*)  as \"Rei\"\n    FROM gratificacao\n    WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    nivel_fca_fct_gfe = 0        \n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria)      \n    AND superintendencia IN ($superintendencia)      \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo)       ",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "$A/$B",
+          "hide": false,
+          "refId": "C",
+          "type": "math"
+        }
+      ],
+      "title": "Rei/Peão",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PCC52D03280B7034C"
+      },
       "description": "",
       "gridPos": {
         "h": 5,
-        "w": 9,
-        "x": 15,
-        "y": 1
+        "w": 6,
+        "x": 0,
+        "y": 6
       },
       "id": 282,
       "options": {
@@ -491,7 +1006,362 @@
         "type": "grafana-postgresql-datasource",
         "uid": "PCC52D03280B7034C"
       },
-      "description": "Filtros: <br>\n- Competência <br>\n- Incluir FCT Zerad: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+      "description": "Esta tabela indica o nível em que aproximadamente 50% da verba é distribuída para \"cima\" e para \"baixo\". Por exemplo, se o corte foi o nível 29, isto significa que os empregados com níveis acima do 28, detém 50% de todo o valor das gratificações. A Quantidade de Empregados indica quantos empregados estão nessa faixa. Ou seja, uma minoria ganha mais... \n\nFiltros: <br>\n- Competência <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "qtd_empregados"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "locale"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Nível de Corte de ~50% do valor"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 243
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Percentual do Valor Total"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 187
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 6,
+        "y": 6
+      },
+      "id": 2082,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH ranked AS (\n  SELECT \n    nivel_fca_fct_gfe AS nivel,\n    COUNT(*) AS qtd_empregados, -- Conta quantos empregados estão em cada nível\n    SUM(valor_fca_fct_gfe) AS total_por_nivel -- Soma o valor total de cada nível\n  FROM gratificacao\n  WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria)   \n    AND superintendencia IN ($superintendencia)         \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo) \n  GROUP BY nivel_fca_fct_gfe\n  ORDER BY nivel_fca_fct_gfe\n),\nacumulado AS (\n  SELECT \n    nivel,\n    qtd_empregados,\n    total_por_nivel,\n    SUM(total_por_nivel) OVER (ORDER BY nivel) AS acumulado, -- Valor acumulado em ordem crescente de nível\n    SUM(total_por_nivel) OVER () AS total_geral -- Total geral de todos os valores\n  FROM ranked\n),\ncorte AS (\n  SELECT \n    nivel,\n    qtd_empregados,\n    total_por_nivel,\n    acumulado,\n    total_geral,\n    acumulado / total_geral AS percentual_acumulado\n  FROM acumulado\n),\ncortes_finais AS (\n  SELECT \n    nivel,\n    qtd_empregados,\n    CASE \n      WHEN percentual_acumulado <= 0.5 THEN 'abaixo_de_50'\n      ELSE 'acima_de_50'\n    END AS grupo\n  FROM corte\n),\ndivisao AS (\n  SELECT \n    grupo,\n    SUM(acumulado.qtd_empregados) AS qtd_empregados,\n    MIN(acumulado.nivel) AS nivel_min,\n    MAX(acumulado.nivel) AS nivel_max,\n    ROUND(SUM(total_por_nivel) * 100.0 / MAX(total_geral), 2) AS percentual\n  FROM cortes_finais\n  JOIN acumulado ON acumulado.nivel = cortes_finais.nivel\n  GROUP BY grupo\n)\nSELECT \n  CASE \n    WHEN grupo = 'acima_de_50' THEN '>= ' || nivel_min\n    ELSE '< ' || nivel_max\n  END AS nivel,\n  qtd_empregados,\n  percentual || '%' AS percentual\nFROM divisao\nORDER BY 3 desc;\n",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Distribuição de 50% da verba",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "nivel": "Nível de Corte de ~50% do valor",
+              "percentual": "Percentual do Valor Total",
+              "qtd_empregados": "Quantidade de Empregados dentro da faixa de corte"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PCC52D03280B7034C"
+      },
+      "description": "Esta tabela mostra a quantidade empregados dentro de cada nível e o valor montante desses empregados, além do percentual deste valor em relação ao total.\n<br><br>\nFiltros: <br>\n- Competência <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "qtd_empregados"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "locale"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Nível de Corte de ~50% do valor"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 243
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Percentual do Valor Total"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 187
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "percentual"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Valor Total"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "locale"
+              },
+              {
+                "id": "custom.minWidth",
+                "value": 111
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Nível"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 50
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Qtd Empregados"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 136
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "%"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 77
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 6,
+        "x": 18,
+        "y": 6
+      },
+      "id": 2083,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": [
+            "percentual",
+            "qtd_empregados",
+            "total_por_nivel"
+          ],
+          "reducer": [
+            "sum"
+          ],
+          "show": true
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PCC52D03280B7034C"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT \n    nivel_fca_fct_gfe AS nivel,\n    COUNT(*) AS qtd_empregados, -- Conta quantos empregados estão em cada nível\n    SUM(valor_fca_fct_gfe) AS total_por_nivel, -- Soma o valor total de cada nível\n    ROUND(SUM(valor_fca_fct_gfe) * 100.0 / SUM(SUM(valor_fca_fct_gfe)) OVER (), 2) AS percentual -- Percentual de cada nível em relação ao total\n  FROM gratificacao\n  WHERE competencia = TO_DATE('$competencia', 'MM/YYYY')\n    AND\n    CASE \n        WHEN '$zero' = 'Sim' THEN true\n        ELSE nivel_fca_fct_gfe > 0\n    END\n    AND\n    sigla_regional IN ($sigla_regional)   \n    AND\n    diretoria IN ($diretoria)   \n    AND superintendencia IN ($superintendencia)         \n    AND\n    lotacao_hierarquica IN ($lotacao_hierarquica)\n    AND\n    cargo IN ($cargo) \n  GROUP BY nivel_fca_fct_gfe\n  ORDER BY 1 desc",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Distribuição da verba por nível",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "nivel": "Nível",
+              "percentual": "%",
+              "qtd_empregados": "Qtd Empregados",
+              "total_por_nivel": "Valor Total"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PCC52D03280B7034C"
+      },
+      "description": "Filtros: <br>\n- Competência <br>\n- Incluir FCT Zerada: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -540,7 +1410,7 @@
             },
             "properties": [
               {
-                "id": "custom.width",
+                "id": "custom.minWidth",
                 "value": 183
               }
             ]
@@ -573,14 +1443,118 @@
                 ]
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Competência"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 122
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Matrícula"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 102
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Diretoria"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 98
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Superintendência"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 155
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cargo"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 89
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Valor"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 85
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Data Designação"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 95
+              },
+              {
+                "id": "unit",
+                "value": "time:DD/MM/YYYY"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Data destituição"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 144
+              },
+              {
+                "id": "unit",
+                "value": "time:DD/MM/YYYY"
+              }
+            ]
           }
         ]
       },
       "gridPos": {
-        "h": 10,
-        "w": 24,
+        "h": 9,
+        "w": 18,
         "x": 0,
-        "y": 6
+        "y": 11
       },
       "id": 1982,
       "options": {
@@ -595,12 +1569,7 @@
         },
         "frameIndex": 0,
         "showHeader": true,
-        "sortBy": [
-          {
-            "desc": true,
-            "displayName": "nivel_fca_fct_gfe"
-          }
-        ]
+        "sortBy": []
       },
       "pluginVersion": "10.4.0",
       "targets": [
@@ -710,7 +1679,7 @@
         "type": "grafana-postgresql-datasource",
         "uid": "PCC52D03280B7034C"
       },
-      "description": "Todas as competências. Mas ainda considera o filtro para excluir as gratificações zeradas.\n\nFiltros: <br>\n- Incluir FCT Zerad: $zero",
+      "description": "Todas as competências. Mas ainda considera o filtro para excluir as gratificações zeradas.\n\nFiltros: <br>\n- Incluir FCT Zerada: $zero",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -798,7 +1767,7 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 16
+        "y": 20
       },
       "id": 544,
       "options": {
@@ -966,7 +1935,7 @@
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 16
+        "y": 20
       },
       "id": 2028,
       "options": {
@@ -1047,7 +2016,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 22
+        "y": 26
       },
       "id": 543,
       "panels": [],
@@ -1268,7 +2237,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 23
+        "y": 27
       },
       "id": 1,
       "options": {
@@ -1476,7 +2445,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 32
+        "y": 36
       },
       "id": 1981,
       "options": {
@@ -1642,7 +2611,7 @@
         "h": 5,
         "w": 24,
         "x": 0,
-        "y": 42
+        "y": 46
       },
       "id": 1983,
       "options": {
@@ -1723,7 +2692,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 47
+        "y": 51
       },
       "id": 2073,
       "panels": [],
@@ -1735,7 +2704,7 @@
         "type": "grafana-postgresql-datasource",
         "uid": "PCC52D03280B7034C"
       },
-      "description": "Filtros: <br>\n- Competência <br>\n- Incluir FCT Zerad: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+      "description": "Filtros: <br>\n- Competência <br>\n- Incluir FCT Zerada: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1765,8 +2734,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1781,7 +2749,7 @@
         "h": 10,
         "w": 17,
         "x": 0,
-        "y": 48
+        "y": 52
       },
       "id": 2074,
       "options": {
@@ -2021,7 +2989,7 @@
         "h": 10,
         "w": 7,
         "x": 17,
-        "y": 48
+        "y": 52
       },
       "id": 2076,
       "options": {
@@ -2232,8 +3200,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2438,7 +3405,7 @@
         "h": 9,
         "w": 17,
         "x": 0,
-        "y": 58
+        "y": 62
       },
       "id": 2075,
       "options": {
@@ -2691,7 +3658,7 @@
         "h": 9,
         "w": 7,
         "x": 17,
-        "y": 58
+        "y": 62
       },
       "id": 2077,
       "options": {
@@ -2873,8 +3840,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3079,7 +4045,7 @@
         "h": 9,
         "w": 17,
         "x": 0,
-        "y": 67
+        "y": 71
       },
       "id": 2078,
       "options": {
@@ -3311,7 +4277,7 @@
         "h": 9,
         "w": 7,
         "x": 17,
-        "y": 67
+        "y": 71
       },
       "id": 2079,
       "options": {
@@ -3446,7 +4412,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 76
+        "y": 80
       },
       "id": 8,
       "panels": [
@@ -3455,7 +4421,7 @@
             "type": "grafana-postgresql-datasource",
             "uid": "PCC52D03280B7034C"
           },
-          "description": "Filtros: <br>\n- Competência <br>\n- Incluir FCT Zerad: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+          "description": "Filtros: <br>\n- Competência <br>\n- Incluir FCT Zerada: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -3921,7 +4887,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 77
+        "y": 81
       },
       "id": 415,
       "panels": [
@@ -3954,7 +4920,7 @@
             "type": "grafana-postgresql-datasource",
             "uid": "PCC52D03280B7034C"
           },
-          "description": "Filtros: <br>\n- Competência <br>\n- Incluir FCT Zerad: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+          "description": "Filtros: <br>\n- Competência <br>\n- Incluir FCT Zerada: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -4492,7 +5458,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 78
+        "y": 82
       },
       "id": 47,
       "panels": [
@@ -4501,7 +5467,7 @@
             "type": "grafana-postgresql-datasource",
             "uid": "PCC52D03280B7034C"
           },
-          "description": "Filtros: <br>\n- Competência <br>\n- Incluir FCT Zerad: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+          "description": "Filtros: <br>\n- Competência <br>\n- Incluir FCT Zerada: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -4967,7 +5933,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 79
+        "y": 83
       },
       "id": 21,
       "panels": [
@@ -4976,7 +5942,7 @@
             "type": "grafana-postgresql-datasource",
             "uid": "PCC52D03280B7034C"
           },
-          "description": "Filtros: <br>\n- Competência <br>\n- Incluir FCT Zerad: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
+          "description": "Filtros: <br>\n- Competência <br>\n- Incluir FCT Zerada: $zero <br>\n- Regional <br>\n- Diretoria <br>\n- Superintendência <br>\n- Lotação  <br>\n- Cargo  <br>",
           "fieldConfig": {
             "defaults": {
               "color": {
